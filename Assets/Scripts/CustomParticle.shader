@@ -51,6 +51,19 @@ Shader "Custom/Particle" {
 			return i.color;
 		}
 
+		struct g2f
+		{
+			
+		};
+
+		[maxvertexcount(4)] // on génère un triangle strip de 4 points
+		void geom(point PS_INPUT IN[1], inout TriangleStream<g2f> triStream) {
+		// v2g est une structure (à définir) émise en sortie du Vertex Shader
+		// IN[1] est un tableau de v2g, qui ne contient qu’une seule entrée (car le vertex shader traite un point ici)
+		// triStream est un tableau de la structure g2f (à définir) stockant les Vertex à générer
+		}
+
+
 
 		ENDCG
 		}

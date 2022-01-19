@@ -47,6 +47,7 @@ public class RunCompute : MonoBehaviour
     /// Buffer holding the Particles.
     /// </summary>
     ComputeBuffer particleBuffer;
+    ComputeBuffer gravityBuffer;
 
     /// <summary>
     /// Number of particle per warp.
@@ -100,14 +101,18 @@ public class RunCompute : MonoBehaviour
 
         // create compute buffer
         particleBuffer = new ComputeBuffer(particleCount, SIZE_PARTICLE);
+        gravityBuffer = new ComputeBuffer(1, 12);
 
         particleBuffer.SetData(particleArray);
+        Vector3[] gravity = new[] { Physics.gravity };
+        gravityBuffer.SetData(gravity);
 
         // find the id of the kernel
         mComputeShaderKernelID = computeShader.FindKernel("CSParticle");
 
         // bind the compute buffer to the shader and the compute shader
         computeShader.SetBuffer(mComputeShaderKernelID, "particleBuffer", particleBuffer);
+        computeShader.SetBuffer(mComputeShaderKernelID, "gravityBuffer", gravityBuffer);
         material.SetBuffer("particleBuffer", particleBuffer);
     }
 
@@ -121,6 +126,8 @@ public class RunCompute : MonoBehaviour
     {
         if (particleBuffer != null)
             particleBuffer.Release();
+        if(gravityBuffer != null)
+            gravityBuffer.Release();
     }
 
     // Update is called once per frame
